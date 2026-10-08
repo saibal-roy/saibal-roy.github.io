@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How I publish open source on GitHub · Saibal Roy</title>
+  <meta name="description" content="The checklist Saibal Roy follows when publishing open source on GitHub, with docling-batch-extract as the working example: confidentiality, repository basics, security settings, CI and releases, documentation.">
+  <link rel="canonical" href="https://saibal-roy.github.io/github-practices/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233f51b5'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' font-weight='700' fill='white' text-anchor='middle'%3ESR%3C/text%3E%3C/svg%3E">
+  <meta property="og:title" content="How I publish open source on GitHub">
+  <meta property="og:description" content="A checklist with a working example: every practice links to where it's implemented in docling-batch-extract.">
+  <meta property="og:url" content="https://saibal-roy.github.io/github-practices/">
+  <style>
+    :root {
+      --bg: #f7f8fb; --fg: #1b1d24; --muted: #555b6e; --card: #ffffff; --line: #e3e6ee;
+      --accent: #3f51b5; --accent-fg: #ffffff;
+      --done-bg: #e6f4ea; --done-fg: #1e6b34; --next-bg: #fff4e0; --next-fg: #7a4a00;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #14161c; --fg: #e8eaf0; --muted: #a9afc0; --card: #1d2029; --line: #2d3240;
+              --accent: #8c9eff; --accent-fg: #10121a;
+              --done-bg: #17331f; --done-fg: #8fd6a4; --next-bg: #3a2c12; --next-fg: #f3c77a; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg);
+           font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    main { max-width: 820px; margin: 0 auto; padding: 48px 16px; }
+    a { color: var(--accent); }
+    .back { display: inline-block; margin-bottom: 24px; font-size: 0.95rem; }
+    h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.02em; }
+    .lead { color: var(--muted); margin: 0 0 12px; }
+    .meta { color: var(--muted); font-size: 0.9rem; margin: 0 0 32px; }
+    h2 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 40px 0 6px; }
+    h2 + p { margin: 0 0 14px; color: var(--muted); }
+    ul.items { list-style: none; margin: 0; padding: 0; }
+    ul.items li { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 0 0 10px; }
+    .head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .head strong { font-weight: 600; }
+    .tag { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; flex-shrink: 0; }
+    .done { background: var(--done-bg); color: var(--done-fg); }
+    .next { background: var(--next-bg); color: var(--next-fg); }
+    ul.items p { margin: 6px 0 0; font-size: 0.95rem; }
+    .proof { color: var(--muted); font-size: 0.9rem; }
+    code { font: 0.88em ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; overflow-wrap: anywhere; }
+    .checklist { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; }
+    .checklist ol { margin: 0; padding-left: 1.3em; }
+    .checklist li { margin: 0 0 6px; }
+    footer { margin-top: 56px; color: var(--muted); font-size: 0.9rem; }
+    footer a { color: inherit; }
+  </style>
+</head>
+<body>
+<main>
+  <a class="back" href="../">Saibal Roy · Open-source projects</a>
+
+  <h1>How I publish open source on GitHub</h1>
+  <p class="lead">This is the checklist I follow before and after a repository goes public. A checklist is easy to write, so each practice here links to where it actually lives in <a href="https://github.com/saibal-roy/docling-batch-extract">docling-batch-extract</a>, my first project built this way.</p>
+  <p class="lead">Items marked <span class="tag done">Done</span> are in place today. Items marked <span class="tag next">Next</span> are the gaps I know about and plan to close. I keep both on the page, because a list with no gaps usually isn't honest.</p>
+  <p class="meta">Last checked against the live repository: 9 October 2026, release <a href="https://github.com/saibal-roy/docling-batch-extract/releases/tag/v0.1.0">v0.1.0</a>.</p>
+
+  <h2 id="confidentiality">1. Confidential data stays out</h2>
+  <p>The project started from real client documents, so this comes first. Memory isn't a control; the repository itself has to refuse the data.</p>
+  <ul class="items">
+    <li><div class="head"><span class="tag done">Done</span><strong>Documents are ignored by rule, not by habit</strong></div>
+      <p><code>*.pdf</code> is ignored at the root, with an exception only for the licensed demo file, and each data folder (<code>inputs/</code>, <code>outputs/</code>, <code>completed/</code>, <code>errors/</code>, <code>logs/</code>) has its own <code>.gitignore</code> that keeps the folder and ignores its contents.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/.gitignore">.gitignore</a>, <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/inputs/.gitignore">inputs/.gitignore</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>CI fails if a document or output is ever committed</strong></div>
+      <p>A data guard runs on every push and pull request, before any other check.</p>
+      <p class="proof">Proof: the "No documents or outputs committed" step in <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/.github/workflows/ci.yml">ci.yml</a>; the documentation build has its own "No PDFs or data on the site" step in <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/.github/workflows/pages.yml">pages.yml</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>A search for client identifiers before every commit and release</strong></div>
+      <p>File names, case numbers, local paths and phone numbers. The tests use synthetic PDFs and a demo paper published under CC BY 4.0, with its license recorded next to it.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/tests/make_test_pdfs.py">tests/make_test_pdfs.py</a>, <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/scripts/demo-files/README.md">scripts/demo-files/README.md</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Private measurements stay private</strong></div>
+      <p>Benchmarks from real client servers aren't published. The public numbers come from a machine I control, and the README says which hardware they came from.</p>
+      <p class="proof">Proof: the hardware notes in the <a href="https://github.com/saibal-roy/docling-batch-extract#memory-profile-measured-2-vcpu-target">README's memory profile</a></p></li>
+  </ul>
+
+  <h2 id="basics">2. Repository basics</h2>
+  <p>What someone sees in the first minute decides whether they trust the rest.</p>
+  <ul class="items">
+    <li><div class="head"><span class="tag done">Done</span><strong>A README that answers what, why, how and how much</strong></div>
+      <p>Background, how it works, setup, sizing from measured numbers, cost compared with cloud OCR, security, maintenance policy and troubleshooting. CI, license and release badges at the top.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract#readme">README</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>A license, a description, a website link and topics</strong></div>
+      <p>MIT. The About box has a one-sentence description, the documentation site as its website, and topics people actually search for.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/LICENSE">LICENSE</a> and the repository's About box</p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Semantic versioning with a written public contract</strong></div>
+      <p>The changelog defines what counts as breaking (the JSON schema, folder layout, options, exit codes, log lines), and the version is printed by the tool and written into every output.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/CHANGELOG.md">CHANGELOG.md</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>The design history is part of the repository</strong></div>
+      <p>Versioned plans with requirement IDs and the evidence behind each decision, the story of how it was built, and the prompts to rebuild it.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/tree/main/versions">versions/</a>, <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/STORY.md">STORY.md</a>, <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/prompts.md">prompts.md</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Instructions for coding agents</strong></div>
+      <p>A <code>CLAUDE.md</code> with the commands, architecture and the rules that must not be broken (never expose the server port, never commit documents), so an AI assistant works within the same limits I do.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/CLAUDE.md">CLAUDE.md</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Clear about contributions</strong></div>
+      <p>It's a side project I maintain part-time, so there's no contributing guide inviting pull requests. Issues and security reports are welcome.</p></li>
+  </ul>
+
+  <h2 id="security">3. Security settings</h2>
+  <p>Most of these are switches in the repository settings. They cost nothing and are easy to forget.</p>
+  <ul class="items">
+    <li><div class="head"><span class="tag done">Done</span><strong>Private vulnerability reporting, with a security policy</strong></div>
+      <p>Reports go through the Security tab, not public issues. The policy says what's in scope, which versions get fixes, and never to attach real documents.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/SECURITY.md">SECURITY.md</a>, the "Report a vulnerability" button on the <a href="https://github.com/saibal-roy/docling-batch-extract/security">Security tab</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Secret scanning and push protection</strong></div>
+      <p>GitHub scans for leaked credentials and blocks a push that contains one. The project also needs no credentials to run.</p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Workflows get the least access they need</strong></div>
+      <p>The default workflow token is read-only. Each workflow declares its own <code>permissions</code>: CI reads only, Pages adds just what deployment needs, and only the release job can write.</p>
+      <p class="proof">Proof: the <code>permissions</code> blocks in <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/.github/workflows/ci.yml">ci.yml</a>, <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/.github/workflows/pages.yml">pages.yml</a> and <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/.github/workflows/release.yml">release.yml</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Secure by default in the product, and tested</strong></div>
+      <p>The conversion server has no authentication, so it's published on <code>127.0.0.1</code> only. An acceptance check fails the build if that ever changes, and the docs say never to open the port in a firewall or security group.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/docker-compose.yml">docker-compose.yml</a>, check A25 in <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/tests/run_acceptance.sh">tests/run_acceptance.sh</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Pinned versions, upgraded on purpose</strong></div>
+      <p>Python packages, the container image (an exact tag, never <code>latest</code>) and the tools are pinned to their latest stable or LTS release. Upgrades go through the same gate as a release.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/requirements.txt">requirements.txt</a>, the maintenance policy in the README</p></li>
+    <li><div class="head"><span class="tag next">Next</span><strong>Dependabot alerts and security updates</strong></div>
+      <p>So a new advisory against a pinned package shows up without waiting for my next manual check.</p></li>
+    <li><div class="head"><span class="tag next">Next</span><strong>Protect the main branch</strong></div>
+      <p>A ruleset that blocks force pushes and deletion of <code>main</code>, without getting in the way of a solo maintainer.</p></li>
+    <li><div class="head"><span class="tag next">Next</span><strong>Pin GitHub Actions to commit hashes</strong></div>
+      <p>The workflows use major versions such as <code>actions/checkout@v7</code>. Pinning to a full commit hash protects against a tag being moved.</p></li>
+  </ul>
+
+  <h2 id="ci">4. CI and releases</h2>
+  <p>Reliability you can prove: nothing is called done until a check says so.</p>
+  <ul class="items">
+    <li><div class="head"><span class="tag done">Done</span><strong>CI on every push and pull request</strong></div>
+      <p>Python lint, shell lint, a compose file check and the data guard, then a full setup on a fresh Ubuntu 26.04 LTS runner with a smoke test, the demo run and the acceptance checks.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/actions/workflows/ci.yml">CI runs</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>A go-ahead gate before anything ships</strong></div>
+      <p>The whole lifecycle (setup, smoke test, cleanup, demo, acceptance) rehearsed in a clean Ubuntu 26.04 container limited to the target's 2 CPUs. A run only passes if its log reaches the final marker, because a test that silently runs nothing also "passes".</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/tests/ubuntu_container_test.sh">tests/ubuntu_container_test.sh</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Releases that can't disagree with themselves</strong></div>
+      <p>Pushing a tag starts the release workflow. It checks that the tag, the version in the code and a dated changelog section all agree, runs the full CI again, then publishes the release with that changelog section as its notes.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/.github/workflows/release.yml">release.yml</a>, <a href="https://github.com/saibal-roy/docling-batch-extract/releases/tag/v0.1.0">v0.1.0</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Commits that are mine</strong></div>
+      <p>Every commit and tag is authored under my own name and email, and the history has no personal or client paths in it.</p></li>
+  </ul>
+
+  <h2 id="docs">5. Documentation and discovery</h2>
+  <p>If people can't find it or read it, the rest doesn't matter.</p>
+  <ul class="items">
+    <li><div class="head"><span class="tag done">Done</span><strong>A documentation site on GitHub Pages</strong></div>
+      <p>Built from the repository's own Markdown by GitHub Actions on every push to <code>main</code>, served over HTTPS, built in strict mode and crawled for broken links, anchors and assets, first locally and then in the workflow.</p>
+      <p class="proof">Proof: <a href="https://saibal-roy.github.io/docling-batch-extract/">the site</a>, <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/scripts/preview_site.sh">scripts/preview_site.sh</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>A first run anyone can try</strong></div>
+      <p>One script checks the environment, converts the demo file and prints a benchmark report for that machine.</p>
+      <p class="proof">Proof: <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/scripts/demo_run.sh">scripts/demo_run.sh</a></p></li>
+    <li><div class="head"><span class="tag done">Done</span><strong>Linked from my profile and this page</strong></div>
+      <p>Featured in my <a href="https://github.com/saibal-roy">GitHub profile README</a> and listed on <a href="../">this site</a>. The personal repositories around it were cleaned up first, after taking verified backups.</p></li>
+    <li><div class="head"><span class="tag next">Next</span><strong>Social preview image and pinned repositories</strong></div>
+      <p>The 1280 x 640 preview image is ready in <a href="https://github.com/saibal-roy/docling-batch-extract/blob/main/docs/images/social-preview.png">docs/images</a>; it still needs uploading in the repository settings, and the repository pinning on my profile.</p></li>
+    <li><div class="head"><span class="tag next">Next</span><strong>Turn off what isn't used</strong></div>
+      <p>The wiki and Projects tabs are still on but empty. Fewer empty tabs, less to wonder about.</p></li>
+  </ul>
+
+  <h2 id="checklist">The checklist for my next project</h2>
+  <p>The short version, in the order I do it.</p>
+  <div class="checklist">
+    <ol>
+      <li>Ignore rules for every kind of private data, plus a CI step that fails if any of it is committed.</li>
+      <li>Synthetic or openly licensed test files only; record the license next to them.</li>
+      <li>README, LICENSE, CHANGELOG with a written public contract, SECURITY.md, CLAUDE.md.</li>
+      <li>Description, website link and topics in the About box; a 1280 x 640 social preview image.</li>
+      <li>Private vulnerability reporting, secret scanning, push protection, Dependabot alerts.</li>
+      <li>Read-only default workflow token; a <code>permissions</code> block in every workflow.</li>
+      <li>Actions pinned to commit hashes; dependencies pinned to the latest stable or LTS release.</li>
+      <li>A ruleset that protects <code>main</code> from force pushes and deletion.</li>
+      <li>CI with lint, the data guard and an end-to-end run on the one supported platform.</li>
+      <li>A go-ahead gate that rehearses a fresh install at the target size before any release.</li>
+      <li>A release workflow that checks tag, version and dated changelog agree, then runs CI again.</li>
+      <li>Documentation built strictly and link-checked locally before Pages publishes it.</li>
+      <li>A search for client identifiers and local paths before every commit and release.</li>
+      <li>Unused tabs off; the repository featured on my profile and on this site.</li>
+    </ol>
+  </div>
+
+  <footer>© 2026 Saibal Roy · <a href="../">saibal-roy.github.io</a> · <a href="https://www.saibalroy.com/">saibalroy.com</a></footer>
+</main>
+</body>
+</html>

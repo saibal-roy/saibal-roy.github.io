@@ -5,6 +5,7 @@ The GitHub Pages **user site** for [Saibal Roy](https://www.saibalroy.com/): a s
 | File | Purpose |
 |------|---------|
 | `index.html` | The page: plain HTML/CSS, no build step, light and dark mode, mobile-friendly |
+| `github-practices/index.html` | How I publish open source on GitHub: the checklist, with each practice linked to where it's implemented in docling-batch-extract. Update the Done and Next tags when a setting changes |
 | `prompts.md` | How I build: the prompts that rebuild docling-batch-extract with every validated decision, and the reusable template for any similar solution (copy of the project's maintained original) |
 | `.nojekyll` | Tells GitHub Pages to serve the files as they are (no Jekyll processing) |
 | `.github/workflows/pages.yml` | On every push to `main`: stages the published files, checks every link, then deploys |
@@ -30,4 +31,4 @@ It serves this folder at `http://localhost:8080/` and the project site at `http:
 
 Don't set a custom domain here unless you mean to. A custom domain on the user site also moves every project site (for example to `https://<domain>/docling-batch-extract/`).
 
-To add a project: copy its `<article class="card">` block in `index.html` and change the name, description and links.
+To add a project: copy its `<article class="card">` block in `index.html` and change the name, description and links. To add a page: create a folder with its own `index.html` (like `github-practices/`); the Pages workflow publishes every top-level folder that has one.

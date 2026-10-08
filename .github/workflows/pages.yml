@@ -29,6 +29,8 @@ jobs:
           mkdir -p _site
           cp index.html .nojekyll _site/
           [ -d assets ] && cp -R assets _site/ || true
+          # Each page lives in its own folder with an index.html (e.g. github-practices/)
+          for d in */; do d=${d%/}; [ -f "$d/index.html" ] && cp -R "$d" _site/; done
 
       - name: Check links, anchors and assets
         # Project sites (e.g. /docling-batch-extract/) are published from their own repositories.
