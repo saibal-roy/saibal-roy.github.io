@@ -1,10 +1,11 @@
 # saibal-roy.github.io
 
-The GitHub Pages **user site** for [Saibal Roy](https://www.saibalroy.com/): a static profile page served at **https://saibal-roy.github.io/**, linking to project documentation sites such as [docling-batch-extract](https://saibal-roy.github.io/docling-batch-extract/).
+The GitHub Pages **user site** for [Saibal Roy](https://www.saibalroy.com/): a static profile page served at **https://saibal-roy.github.io/**. It introduces how I build open source: from real production requirements to reusable business solutions designed for cost-effectiveness and reliability. It links to each project's documentation, starting with [docling-batch-extract](https://saibal-roy.github.io/docling-batch-extract/).
 
 | File | Purpose |
 |------|---------|
 | `index.html` | The page: plain HTML/CSS, no build step, light and dark mode, mobile-friendly |
+| `prompts.md` | How I build: the prompts that rebuild docling-batch-extract with every validated decision, and the reusable template for any similar solution (copy of the project's maintained original) |
 | `.nojekyll` | Tells GitHub Pages to serve the files as they are (no Jekyll processing) |
 | `.github/workflows/pages.yml` | On every push to `main`: stages the published files, checks every link, then deploys |
 | `scripts/check_site.py` | The link checker (same as the project's). Links into project sites (`docling-batch-extract/`) are skipped, because those deploy from their own repositories |
