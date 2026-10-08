@@ -6,7 +6,7 @@ The GitHub Pages **user site** for [Saibal Roy](https://www.saibalroy.com/): a s
 |------|---------|
 | `index.html` | The page: plain HTML/CSS, no build step, light and dark mode, mobile-friendly |
 | `github-practices/index.html` | How I publish open source on GitHub: the checklist, with each practice linked to where it's implemented in docling-batch-extract. Update the Done and Next tags when a setting changes |
-| `prompts.md` | How I build: the prompts that rebuild docling-batch-extract with every validated decision, and the reusable template for any similar solution (copy of the project's maintained original) |
+| `prompts.md` | How I build: the principles, and links to the prompts. The prompts themselves live only in docling-batch-extract's `prompts.md`, so there is one copy to improve |
 | `.nojekyll` | Tells GitHub Pages to serve the files as they are (no Jekyll processing) |
 | `.github/workflows/pages.yml` | On every push to `main`: stages the published files, checks every link, then deploys |
 | `scripts/check_site.py` | The link checker (same as the project's). Links into project sites (`docling-batch-extract/`) are skipped, because those deploy from their own repositories |
