@@ -1,0 +1,52 @@
+name: Pages
+
+# Publishes https://saibal-roy.github.io/ on every push to main, after checking every link.
+# One-time repository setting: Settings → Pages → Source: GitHub Actions.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Stage only the files to publish
+        run: |
+          mkdir -p _site
+          cp index.html .nojekyll _site/
+          [ -d assets ] && cp -R assets _site/ || true
+
+      - name: Check links, anchors and assets
+        # Project sites (e.g. /docling-batch-extract/) are published from their own repositories.
+        run: |
+          python3 -m http.server 8080 --directory _site >/dev/null 2>&1 &
+          sleep 1
+          python3 scripts/check_site.py http://localhost:8080/ --no-search --ignore docling-batch-extract/
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-26.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

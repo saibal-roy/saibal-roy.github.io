@@ -1,0 +1,3 @@
+# Build output of the Pages workflow
+_site/
+.DS_Store
