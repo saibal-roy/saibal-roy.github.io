@@ -31,4 +31,5 @@ Headless Chrome screenshots can't go below 500 px wide, so check mobile layouts 
 - **The practices page must match reality.** Before changing a Done or Next tag, check the setting through the GitHub API on the repositories it covers (docling-batch-extract, saibal-roy.github.io, saibalroy-em).
 - **Prompts improve themselves**, but not here: improvements go into docling-batch-extract's `prompts.md` and its improvements log.
 - **Writing:** Saibal's own voice, plain and specific; no emojis and no em-dashes anywhere. Every number is measured or sourced.
+- **Employer:** his company may appear only in career-history sentences (the story on the home page). Never as a label: not in titles, meta descriptions, link-preview text or images, project cards or the practices page. A label without it must not read as working at AWS ("I lead a DevOps team that runs client platforms on AWS").
 - **Commits:** only when asked, authored as Saibal Roy <connectsaibalroy@gmail.com>, with no co-author or AI trailer.
