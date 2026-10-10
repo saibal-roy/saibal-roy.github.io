@@ -13,6 +13,7 @@ The GitHub Pages user site of Saibal Roy, live at https://saibal-roy.github.io/.
 | `prompts.md` | A pointer to the build prompts. The prompts live only in docling-batch-extract's `prompts.md`; never copy them here |
 | `.github/workflows/pages.yml` | Publishes `index.html`, `.nojekyll`, `assets/` and every top-level folder with its own `index.html`, after a link crawl |
 | `.github/social-preview.png` | 1280 x 640 image for Settings, General, Social preview (uploaded by hand; GitHub has no API for it) |
+| `assets/og-image.png` | The same image, published with the site as the home page's `og:image` (link previews on LinkedIn, X and Slack). Replace both together |
 
 ## Commands
 
